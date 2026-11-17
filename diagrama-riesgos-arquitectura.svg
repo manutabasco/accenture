@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 960" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1F2A44"/></marker>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C0392B"/></marker>
+  </defs>
+  <rect width="1500" height="960" fill="#FFFFFF"/>
+  <text x="750" y="40" text-anchor="middle" font-size="26" font-weight="bold" fill="#1F2A44">Chatbot RAG (FastAPI): límites de confianza, riesgos y controles por capa</text>
+  <text x="750" y="66" text-anchor="middle" font-size="14" fill="#555">NIST AI RMF 1.0 · OWASP LLM 2025 · OWASP Agentic (ASI) · OWASP API 2023 · MITRE ATLAS</text>
+
+  <!-- Trust boundaries -->
+  <rect x="20" y="90" width="300" height="640" rx="10" fill="#F4F6FA" stroke="#C0392B" stroke-width="2" stroke-dasharray="8 5"/>
+  <text x="35" y="115" font-size="13" font-weight="bold" fill="#C0392B">TB1 · ZONA NO FIABLE (usuario / Internet)</text>
+  <rect x="340" y="90" width="760" height="640" rx="10" fill="#FBFBFB" stroke="#E67E22" stroke-width="2" stroke-dasharray="8 5"/>
+  <text x="355" y="115" font-size="13" font-weight="bold" fill="#E67E22">TB2 · BACKEND (FastAPI + Chroma): hoy sin autenticación</text>
+  <rect x="1120" y="90" width="360" height="640" rx="10" fill="#F4FAF5" stroke="#8E44AD" stroke-width="2" stroke-dasharray="8 5"/>
+  <text x="1135" y="115" font-size="13" font-weight="bold" fill="#8E44AD">TB3 · TERCEROS (Groq / Google / HuggingFace)</text>
+
+  <!-- User -->
+  <rect x="50" y="300" width="240" height="120" rx="10" fill="#DCE8F7" stroke="#1F2A44"/>
+  <text x="170" y="340" text-anchor="middle" font-size="16" font-weight="bold">Interfaz web (Streamlit)</text>
+  <text x="170" y="362" text-anchor="middle" font-size="13">Usuario anónimo</text>
+  <text x="170" y="382" text-anchor="middle" font-size="13">Historial en session_state</text>
+  <text x="170" y="402" text-anchor="middle" font-size="13">st.markdown(output)</text>
+
+  <!-- Perception -->
+  <rect x="370" y="140" width="330" height="130" rx="10" fill="#FDEBD9" stroke="#1F2A44"/>
+  <text x="535" y="168" text-anchor="middle" font-size="16" font-weight="bold">PERCEPCIÓN · Ingesta</text>
+  <text x="535" y="192" text-anchor="middle" font-size="13">Carga → temp/ (file.filename)</text>
+  <text x="535" y="212" text-anchor="middle" font-size="13">PyPDF → TokenTextSplitter 500/50</text>
+  <text x="535" y="232" text-anchor="middle" font-size="13">Sin escaneo de contenido</text>
+  <text x="535" y="252" text-anchor="middle" font-size="13">Valida solo .pdf y ≤ 200 MB</text>
+
+  <!-- Orchestrator -->
+  <rect x="370" y="320" width="700" height="100" rx="10" fill="#FAD7B5" stroke="#1F2A44"/>
+  <text x="720" y="352" text-anchor="middle" font-size="17" font-weight="bold">ORQUESTADOR · API FastAPI (7 endpoints) + LangChain retrieval chain</text>
+  <text x="720" y="376" text-anchor="middle" font-size="13">Sin AuthN/AuthZ · sin rate limit · str(e) al cliente · reload=True · /docs público</text>
+  <text x="720" y="398" text-anchor="middle" font-size="13">System prompt mínimo, contexto sin delimitar · sin guardarraíles de entrada ni salida</text>
+
+  <!-- Memory -->
+  <rect x="370" y="480" width="700" height="130" rx="10" fill="#DFF0E3" stroke="#1F2A44"/>
+  <text x="720" y="508" text-anchor="middle" font-size="16" font-weight="bold">MEMORIA · Chroma vector store (persistente, compartida)</text>
+  <text x="720" y="532" text-anchor="middle" font-size="13">Una colección por proveedor, NO por usuario · sin procedencia · "Reset" no la borra</text>
+  <text x="720" y="554" text-anchor="middle" font-size="13">/vector_store/search e Inspector devuelven chunks en bruto</text>
+  <text x="720" y="576" text-anchor="middle" font-size="13">Embeddings: MiniLM local (Groq) o Google embedding-001 (Gemini, el documento sale a Google)</text>
+  <text x="720" y="598" text-anchor="middle" font-size="13">./data y ./temp en claro, sin retención definida</text>
+
+  <!-- Reasoning -->
+  <rect x="1150" y="150" width="300" height="100" rx="10" fill="#DFF0E3" stroke="#1F2A44"/>
+  <text x="1300" y="182" text-anchor="middle" font-size="16" font-weight="bold">RECUPERADOR</text>
+  <text x="1300" y="206" text-anchor="middle" font-size="13">k=3, sin umbral ni filtro owner</text>
+  <rect x="1150" y="300" width="300" height="110" rx="10" fill="#E8DAEF" stroke="#1F2A44"/>
+  <text x="1300" y="332" text-anchor="middle" font-size="16" font-weight="bold">LLM (Groq / Gemini)</text>
+  <text x="1300" y="356" text-anchor="middle" font-size="13">API key única en .env</text>
+  <text x="1300" y="376" text-anchor="middle" font-size="13">Sin max_tokens ni timeout</text>
+  <text x="1300" y="396" text-anchor="middle" font-size="13">Recibe prompt + 3 chunks</text>
+  <rect x="1150" y="470" width="300" height="100" rx="10" fill="#DFF0E3" stroke="#1F2A44"/>
+  <text x="1300" y="502" text-anchor="middle" font-size="16" font-weight="bold">GENERACIÓN</text>
+  <text x="1300" y="526" text-anchor="middle" font-size="13">Salida directa, sin validar</text>
+  <text x="1300" y="546" text-anchor="middle" font-size="13">ni citar la fuente</text>
+
+  <!-- Future: tools / MCP -->
+  <rect x="1150" y="610" width="300" height="100" rx="10" fill="#FFFFFF" stroke="#7F8C8D" stroke-dasharray="5 4"/>
+  <text x="1300" y="640" text-anchor="middle" font-size="15" font-weight="bold" fill="#7F8C8D">TOOLS / MCP (no existen hoy)</text>
+  <text x="1300" y="662" text-anchor="middle" font-size="12" fill="#7F8C8D">Si se añaden: ASI02, ASI03, ASI05</text>
+  <text x="1300" y="680" text-anchor="middle" font-size="12" fill="#7F8C8D">allowlist + HITL + scopes mínimos</text>
+
+  <!-- Flows -->
+  <path d="M290,330 L370,210" stroke="#1F2A44" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <text x="300" y="255" font-size="13" font-weight="bold">0 Sube PDF</text>
+  <path d="M290,360 L370,360" stroke="#1F2A44" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <text x="296" y="352" font-size="13" font-weight="bold">1 Consulta</text>
+  <path d="M535,270 L535,320" stroke="#1F2A44" stroke-width="2" marker-end="url(#a)"/>
+  <text x="545" y="300" font-size="13" font-weight="bold">2 Chunks</text>
+  <path d="M600,420 L600,480" stroke="#1F2A44" stroke-width="2" marker-end="url(#a)"/>
+  <text x="610" y="455" font-size="13" font-weight="bold">3a Embeddings / upsert</text>
+  <path d="M1070,500 L1150,230" stroke="#1F2A44" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <text x="1080" y="300" font-size="13" font-weight="bold">3b Retrieve</text>
+  <path d="M1300,250 L1300,300" stroke="#1F2A44" stroke-width="2" marker-end="url(#a)"/>
+  <text x="1310" y="280" font-size="13" font-weight="bold">4 Contexto</text>
+  <path d="M1070,370 L1150,355" stroke="#1F2A44" stroke-width="2" marker-end="url(#a)"/>
+  <text x="1075" y="345" font-size="13" font-weight="bold">5 Prompt</text>
+  <path d="M1300,410 L1300,470" stroke="#1F2A44" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M1150,540 C900,700 400,700 170,420" stroke="#1F2A44" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <text x="520" y="668" font-size="13" font-weight="bold">6 Respuesta (Markdown sin sanear)</text>
+
+  <!-- Risk badges -->
+  <g font-size="12" font-weight="bold" fill="#FFFFFF">
+    <rect x="232" y="268" width="140" height="22" rx="11" fill="#C0392B"/><text x="302" y="283" text-anchor="middle">R5 Path traversal</text>
+    <rect x="300" y="372" width="150" height="22" rx="11" fill="#C0392B"/><text x="375" y="387" text-anchor="middle">R1 Sin identidad</text>
+    <rect x="620" y="138" width="190" height="22" rx="11" fill="#C0392B"/><text x="715" y="153" text-anchor="middle">R3 PDF envenenado</text>
+    <rect x="890" y="470" width="190" height="22" rx="11" fill="#C0392B"/><text x="985" y="485" text-anchor="middle">R2 Memoria compartida</text>
+    <rect x="1070" y="410" width="160" height="22" rx="11" fill="#E67E22"/><text x="1150" y="425" text-anchor="middle">R7 Datos a terceros</text>
+    <rect x="1330" y="420" width="140" height="22" rx="11" fill="#E67E22"/><text x="1400" y="435" text-anchor="middle">R6 Consumo</text>
+    <rect x="230" y="640" width="190" height="22" rx="11" fill="#E67E22"/><text x="325" y="655" text-anchor="middle">R4 Exfiltración salida</text>
+    <rect x="1290" y="575" width="160" height="22" rx="11" fill="#D4AC0D"/><text x="1370" y="590" text-anchor="middle">R8 Sin fuentes</text>
+    <rect x="900" y="300" width="160" height="22" rx="11" fill="#D4AC0D"/><text x="980" y="315" text-anchor="middle">R9 Sin trazabilidad</text>
+  </g>
+
+  <!-- Legend / controls -->
+  <rect x="20" y="750" width="1460" height="195" rx="10" fill="#F4F6FA" stroke="#1F2A44"/>
+  <text x="40" y="778" font-size="15" font-weight="bold" fill="#1F2A44">Controles clave por punto del flujo</text>
+  <g font-size="13" fill="#222">
+    <text x="40" y="805">0 Ingesta → IN-01 nombre uuid · IN-02 magic bytes · IN-03 límites · IN-04 escaneo de inyección (LLM01/ASI06, AML.T0070)</text>
+    <text x="40" y="828">1 Consulta → AC-01 OAuth2/JWT · PL-01 rate limit · LL-02 detector de inyección y longitud (API2/API4, LLM01, AML.T0051.000)</text>
+    <text x="40" y="851">3 Memoria → AC-03 colección por tenant + filtro owner · procedencia y purga · retención (LLM08, ASI06, API1, AML.T0057)</text>
+    <text x="40" y="874">5 Prompt/LLM → LL-01 &lt;context&gt; no fiable · canary · max_tokens · DPA con terceros (LLM07, LLM10, ASI04, GOVERN 6.1)</text>
+    <text x="40" y="897">6 Respuesta → LL-03 filtro de salida · LL-04 Markdown sin imágenes remotas · citas (LLM05, LLM09, ASI09, AML.T0077)</text>
+    <text x="40" y="920">Transversal → LG-01 auditoría · LG-02 SIEM · MAN-04 botón de apagado · MAN-01 go/no-go (NIST MEASURE 2.8, MANAGE 1.1, 2.4)</text>
+  </g>
+  <g font-size="12" font-weight="bold" fill="#FFFFFF">
+    <rect x="1180" y="765" width="80" height="20" rx="10" fill="#C0392B"/><text x="1220" y="779" text-anchor="middle">Crítico</text>
+    <rect x="1270" y="765" width="80" height="20" rx="10" fill="#E67E22"/><text x="1310" y="779" text-anchor="middle">Alto</text>
+    <rect x="1360" y="765" width="80" height="20" rx="10" fill="#D4AC0D"/><text x="1400" y="779" text-anchor="middle">Medio</text>
+  </g>
+</svg>
